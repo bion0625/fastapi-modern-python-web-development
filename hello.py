@@ -1,9 +1,9 @@
-from fastapi import FastAPI, Header, Response
+from fastapi import FastAPI, Header, Response, Body
 
 app = FastAPI()
 
-@app.get("/hi")
-def greet(who: str = Header()):
+@app.post("/hi")
+def greet(who: str = Body(embed=True)):
     return f"Hello? {who}?"
 
 @app.get("/agent")
