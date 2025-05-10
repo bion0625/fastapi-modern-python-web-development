@@ -22,3 +22,23 @@ def header(name: str, value: str, response: Response):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("hello:app", reload=True)
+
+
+import datetime
+import pytest
+from fastapi.encoders import jsonable_encoder
+import json
+
+@pytest.fixture
+def data():
+    return datetime.datetime.now()
+
+def test_json_dump(data):
+    with pytest.raises(Exception):
+        _ = json.dumps(data)
+
+def test_encoder(data):
+    out = jsonable_encoder(data)
+    assert out
+    join_out = json.dumps(out)
+    assert join_out
