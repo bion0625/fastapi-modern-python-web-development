@@ -1,7 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, constr, Field
 
 class Creature(BaseModel):
-    name: str
+    # name: constr(min_length=2)
+    name: str = Field(..., min_length=2)
     country: str
     area: str
     description: str
@@ -16,3 +17,8 @@ thing = Creature(
 )
 
 print("Name is", thing.name)
+
+bad_creature = Creature(
+    description="it's a raccoon",
+    area="your attic"
+)
