@@ -3,7 +3,7 @@ from fastapi import FastAPI, Header, Response, Body
 app = FastAPI()
 
 @app.get("/hi")
-def greet(who: str):
+def greet(who: str = Header()):
     return f"Hello? {who}?"
 
 @app.post("/hi")
