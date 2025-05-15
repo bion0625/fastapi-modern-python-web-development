@@ -1,5 +1,7 @@
 from data.init_db import conn, curs
 from model.explorer import Explorer
+from error import Missing, Duplicate
+from sqlite3 import IntegrityError
 
 curs.execute("""create table if not exists explorer(
                     name text primary key, 
@@ -18,7 +20,10 @@ def get_one(name: str) -> Explorer:
     params = {"name": name}
     curs.execute(qry, params)
     row = curs.fetchone()
-    return row_to_model(row)
+    if row:
+        return row_to_model(row)
+    else:
+        raise Missing(msg=f"Explorer {name} not found")
 
 def get_all() -> list[Explorer]:
     qry = "select * from explorer"
@@ -27,40 +32,50 @@ def get_all() -> list[Explorer]:
     return [row_to_model(row) for row in rows]
 
 def create(explorer: Explorer):
+    if not explorer:
+        return None
     qry = """insert into explorer values
         (:name, :description, :country)"""
     params = model_to_dict(explorer)
-    curs.execute(qry, params)
-    conn.commit()
+    try:
+        curs.execute(qry, params)
+        conn.commit()
+    except IntegrityError:
+        raise Duplicate(msg=
+                        f"Explorer {explorer.name} already exists")
     return get_one(explorer.name)
+
+def update(name: str, explorer: Explorer):
+    if not (name and explorer):
+        return None
+    qry = """update explorer
+                set country=:country,
+                    name=:name,
+                    description=:description
+                where name=:name_orig"""
+    params = model_to_dict(explorer)
+    params["name_orig"] = name
+    _ = curs.execute(qry, params)
+    conn.commit()
+    if curs.rowcount == 1:
+        return get_one(explorer.name)
+    else:
+        raise Missing(msg=f"Explorer {name} not fount")
+
 
 def modify(name: str, explorer: Explorer):
-    qry = """update explorer
-                set country=:country,
-                    name=:name,
-                    description=:description
-                where name=:name_orig"""
-    params = model_to_dict(explorer)
-    params["name_orig"] = name
-    _ = curs.execute(qry, params)
-    conn.commit()
-    return get_one(explorer.name)
+    return update(name, explorer)
 
 def replace(name: str, explorer: Explorer):
-    qry = """update explorer
-                set country=:country,
-                    name=:name,
-                    description=:description
-                where name=:name_orig"""
-    params = model_to_dict(explorer)
-    params["name_orig"] = name
-    _ = curs.execute(qry, params)
-    conn.commit()
-    return get_one(explorer.name)
+    return update(name, explorer)
 
 def delete(name: str) -> bool:
+    if not name:
+        return False
     qry = "delete from explorer where name = :name"
     params = {"name": name}
     res = curs.execute(qry, params)
     conn.commit()
+    if curs.rowcount != 1:
+        raise Missing(msg=f"Explorer {name} not found")
     return bool(res)
