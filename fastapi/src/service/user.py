@@ -13,7 +13,7 @@ else:
 
 # SECRET_KEY는 반드시 바꾸고 배포해야 한다!
 SECRET_KEY = "keep-it-secret-keep-it-safe"
-ALGORITHM =" SH256"
+ALGORITHM ="HS256"
 
 def verify_password(plain: str, hash: str) -> bool:
     """plain을 해시 값과, 데이터베이스의 hash 값과 비교한다"""
@@ -71,7 +71,7 @@ def create_access_token(data: dict, expires: timedelta | None = None):
     if not expires:
         expires = timedelta(minutes=15)
     src.update({"exp": now + expires})
-    encoded_jwt = jwt.encode(src, SECRET_KEY, algorithm=[ALGORITHM])
+    encoded_jwt = jwt.encode(src, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 # --- CRUD 통과 코드

@@ -1,5 +1,5 @@
 from model.user import PublicUser, PrivateUser, SignInUser
-from init_db import (conn, curs, get_db, IntegrityError)
+from data.init_db import (conn, curs, get_db, IntegrityError)
 from error import Missing, Duplicate
 
 curs.execute("""create table if not exists
