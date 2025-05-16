@@ -4,7 +4,7 @@ from jose import jwt
 import bcrypt
 from model.user import PublicUser, PrivateUser, SignInUser
 
-if os.getenv("CRYPTED_UNIT_TEST"):
+if os.getenv("CRYPTID_UNIT_TEST"):
     from fake import user as data
 else:
     from data import user as data
