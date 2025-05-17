@@ -2,15 +2,17 @@ import os
 os.environ["CRYPTID_UNIT_TEST"] = "true"
 import pytest
 
-from model.creature import Creature
+from model.explorer import Explorer
 from error import Missing, Duplicate
-from service import creature as service
+from service import explorer as service
 
 @pytest.fixture
-def sample() -> Creature:
-    return Creature(name="Yeti",
-        country="CN",
-        description="눈이 나쁘고 벌목도를 가지고 다님")
+def sample() -> Explorer:
+    return Explorer(name="Noah Weiser",
+        country="DE",
+        area="Himalayas",
+        description="Hirsute Himalayan",
+        aka="Abominable Snowman")
 
 def test_create(sample):
     service.delete(sample.name)
@@ -41,7 +43,7 @@ def test_modify(sample):
     assert resp == sample
 
 def test_modify_missing():
-    bob: Creature = Creature(name="bob", country="US", area="*",
+    bob: Explorer = Explorer(name="bob", country="US", area="*",
                              description="some guy", aka="??")
     with pytest.raises(Missing):
         _ = service.modify(bob.name, bob)
