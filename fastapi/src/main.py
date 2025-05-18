@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from web import creature, explorer, user
+from fastapi.openapi.utils import get_openapi
 
 app = FastAPI()
 
@@ -23,6 +24,21 @@ def top():
 @app.get("/echo/{thing}")
 def echo(thing):
     return f"echoing {thing}"
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Custom title",
+        version="3.0.2",
+        openapi_version="3.0.2",
+        description="커스텀 OpenApi 스키마",
+        routes=app.routes
+    )
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
 
 if __name__ == "__main__":
     import uvicorn
