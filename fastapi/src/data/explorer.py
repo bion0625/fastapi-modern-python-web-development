@@ -3,6 +3,26 @@ from model.explorer import Explorer
 from error import Missing, Duplicate
 from sqlite3 import IntegrityError
 
+from sqlalchemy import MetaData, Table, Column, Text
+from sqlalchemy import create_engine, select, Row
+
+from pathlib import Path
+
+DB_PATH = Path(__file__).resolve().parent.parent / "db" / "cryptid.db"
+
+print(f"DB 경로 확인: {DB_PATH}")
+
+engine = create_engine(f"sqlite:///{DB_PATH}")
+connn = engine.connect()
+meta = MetaData()
+explorer_table = Table(
+    "explorer",
+    meta,
+    Column("name", Text, primary_key=True),
+    Column("country", Text),
+    Column("description", Text),
+)
+
 curs.execute("""create table if not exists explorer(
                     name text primary key, 
                     description text,
@@ -16,14 +36,17 @@ def model_to_dict(explorer: Explorer) -> dict:
     return explorer.model_dump()
 
 def get_one(name: str) -> Explorer:
-    qry = "select * from explorer where name=:name"
-    params = {"name": name}
-    curs.execute(qry, params)
-    row = curs.fetchone()
-    if row:
-        return row_to_model(row)
-    else:
-        raise Missing(msg=f"Explorer {name} not found")
+    # qry = "select * from explorer where name=:name"
+    # params = {"name": name}
+    # curs.execute(qry, params)
+    # row = curs.fetchone()
+    # if row:
+    #     return row_to_model(row)
+    # else:
+    #     raise Missing(msg=f"Explorer {name} not found")
+    stmt = select(explorer_table).where(explorer_table.c.name == name)
+    result = connn.execute(stmt)
+    return result.fetchone()
 
 def get_all() -> list[Explorer]:
     qry = "select * from explorer"
