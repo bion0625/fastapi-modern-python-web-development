@@ -1,2 +1,5 @@
 python-multipart
 aiofiles
+fastapi
+uvicorn
+httpie
