@@ -1,4 +1,5 @@
 from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 
@@ -9,3 +10,7 @@ async def upload_file(small_file: bytes = File()) -> str:
 @app.post("/big")
 async def upload_bog_file(big_file: UploadFile) -> str:
     return f"file size: {big_file.size}, name: {big_file.filename}"
+
+@app.get("/small/{name}")
+async def download_small_file(name):
+    return FileResponse(name)
