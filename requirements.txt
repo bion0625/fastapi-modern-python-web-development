@@ -1,0 +1,10 @@
+uvicorn[standard]
+fastapi
+python-jose
+bcrypt
+python-multipart
+gunicorn
+sqlalchemy
+faker
+torchvision
+transformers
