@@ -1,6 +1,8 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 from typing import Generator
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
@@ -28,3 +30,10 @@ async def download_big_file(name: str):
         status_code=200
     )
     return response
+
+# main.py가 포함된 디렉터리:
+top = Path(__file__).resolve().parent
+
+app.mount("/static",
+          StaticFiles(directory=f"{top}/static", html=True),
+          name="free")
