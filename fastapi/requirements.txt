@@ -6,3 +6,6 @@ python-multipart
 gunicorn
 sqlalchemy
 faker
+plotly[express]
+pandas
+kaleido 

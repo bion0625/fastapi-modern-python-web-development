@@ -55,3 +55,17 @@ def delete(name: str):
         return service.delete(name)
     except Missing as exc:
         raise HTTPException(status_code=404, detail=exc.msg)
+
+from fastapi import Response
+import plotly.express as px
+
+# @router.get("/test/")
+@router.get("/chart/test")
+@router.get("/chart/test/")
+def test():
+    df = px.data.iris()
+    fig = px.scatter(df, x="sepal_width", y="sepal_length", color="species")
+    # fig_bytes = fig.to_image(format="png")
+    fig_bytes = fig.to_html(full_html=True)
+    # return Response(content=fig_bytes, media_type="image/png")
+    return Response(content=fig_bytes, media_type="text/html")
