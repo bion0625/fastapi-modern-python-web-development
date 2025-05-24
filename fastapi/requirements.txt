@@ -8,4 +8,5 @@ sqlalchemy
 faker
 plotly[express]
 pandas
-kaleido 
+kaleido
+country_converter

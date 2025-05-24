@@ -82,3 +82,29 @@ def plot():
     fig = px.histogram(x=list(letters), y=y, title="Creature Names", labels={"x": "Initial", "y": "Initial"})
     fig_bytes = fig.to_html(full_html=True)
     return Response(content=fig_bytes, media_type="text/html")
+
+import country_converter as coco
+
+@router.get("/map/sample")
+@router.get("/map/sample/")
+def map():
+    creatures = service.get_all()
+    iso2_codes = set(creature.country for creature in creatures)
+    iso3_codes = coco.convert(names=iso2_codes, to="ISO3")
+    fig = px.choropleth(
+        locationmode="ISO-3",
+        locations=iso3_codes)
+    fig_bytes = fig.to_html(full_html=True)
+    return Response(content=fig_bytes, media_type="text/html")
+
+@router.get("/map/sample2")
+@router.get("/map/sample2/")
+def map():
+    creatures = service.get_all()
+    areas = [creature.country for creature in creatures]
+    fig = px.choropleth(
+        locationmode="USA-states",
+        locations=areas
+    )
+    fig_bytes = fig.to_html(full_html=True)
+    return Response(content=fig_bytes, media_type="text/html")
