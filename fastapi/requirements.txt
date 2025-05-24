@@ -10,3 +10,4 @@ plotly[express]
 pandas
 kaleido
 country_converter
+jinja2
