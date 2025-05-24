@@ -27,5 +27,5 @@ def get_score(actual: str, guess: str) -> str:
         guess_counter[letter] += 1
         if (letter in actual and guess_counter[letter] <= actual_counter[letter]):
             result[pos] = CLOSE
-    result = ''.join[result]
+    result = ''.join(result)
     return result

@@ -3,7 +3,7 @@ from service import game
 
 word = "bigfoot"
 guesses = [
-    ("bogfoot", "HHHHHHH"),
+    ("bigfoot", "HHHHHHH"),
     ("abcdefg", "MCMMMCC"),
     ("toofgib", "CCCHCCC"),
     ("wronglength", ""),
