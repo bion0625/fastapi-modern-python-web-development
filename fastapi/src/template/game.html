@@ -13,9 +13,11 @@
             padding: 0px;
             border: 1px solid black;
         }
+        table {
+            border-spacing: 4pt;  /* 셀 사이의 간격 */
+        }
         td, th {
-            cell-spacing: 4pt;
-            cell-padding: 4pt;
+            padding: 4pt;  /* 셀 안쪽 여백 */
             border: 1px solid black;
         }
         .H { background-color: #00EE00; } /*hit (green)*/
@@ -25,6 +27,48 @@
 </head>
 <body>
     <script>
+        window.onload = () => {
+            const inputs = document.querySelectorAll("input[name='guess']");
+            inputs.forEach((input, idx) => {
+                input.setAttribute("maxlength", 1);  // 다시 한 번 보장
+
+                input.addEventListener("input", function () {
+                    if (this.value.length === 1 && idx < inputs.length - 1) {
+                        inputs[idx + 1].focus();
+                    }
+                });
+
+                input.addEventListener("keydown", function (e) {
+                    // 백스페이스로 이전 칸으로 이동
+                    if (e.key === "Backspace" && this.value === "" && idx > 0) {
+                        inputs[idx - 1].focus();
+                    }
+                    // 엔터 누르면 post_guess() 실행
+                    if (e.key === "Enter") {
+                        post_guess();
+                        inputs[0].focus();
+                    }
+                });
+
+                // 붙여넣기 이벤트 처리
+                input.addEventListener("paste", function (e) {
+                    e.preventDefault();  // 기본 붙여넣기 동작 막기
+                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                    let i = idx;
+                    for (const char of paste) {
+                        if (i < inputs.length) {
+                            inputs[i].value = char;
+                            i++;
+                        } else {
+                            break;
+                        }
+                    }
+                    if (i < inputs.length) {
+                        inputs[i].focus();
+                    }
+                });
+            });
+        }
         function show_score(guess, score) {
             var table = document.getElementById("guesses");
             var row = table.insertRow()
