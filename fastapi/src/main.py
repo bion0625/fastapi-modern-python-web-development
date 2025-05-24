@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from web import creature, explorer, user
+from web import creature, explorer, user, game
 from fastapi.openapi.utils import get_openapi
 
 # 서버 기동 명령어
@@ -24,6 +24,7 @@ app.add_middleware(
 app.include_router(explorer.router)
 app.include_router(creature.router)
 app.include_router(user.router)
+app.include_router(game.router)
   
 @app.get("/")
 def top():
