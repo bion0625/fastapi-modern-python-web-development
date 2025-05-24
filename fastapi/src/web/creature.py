@@ -69,3 +69,16 @@ def test():
     fig_bytes = fig.to_html(full_html=True)
     # return Response(content=fig_bytes, media_type="image/png")
     return Response(content=fig_bytes, media_type="text/html")
+
+from collections import Counter
+
+@router.get("/chart/plot")
+@router.get("/chart/plot/")
+def plot():
+    cretures = service.get_all()
+    letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    counts = Counter(creature.name[0] for creature in cretures if len(creature.name) > 0)
+    y = {letter: counts.get(letter, 0) for letter in letters}
+    fig = px.histogram(x=list(letters), y=y, title="Creature Names", labels={"x": "Initial", "y": "Initial"})
+    fig_bytes = fig.to_html(full_html=True)
+    return Response(content=fig_bytes, media_type="text/html")
