@@ -27,7 +27,7 @@
     <script>
         function show_score(guess, score) {
             var table = document.getElementById("guesses");
-            var row = table.insertRow(row)
+            var row = table.insertRow()
             for (var i = 0; i < guess.length; i++) {
                 var cell = row.insertCell(i);
                 cell.innerHTML = guess[i];
